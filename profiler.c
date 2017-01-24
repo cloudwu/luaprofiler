@@ -1,9 +1,10 @@
 #include <lua.h>
 #include <lauxlib.h>
+#include <string.h>
 
 struct profiler_log {
 	int linedefined;
-	const char * source;
+	char source[12];
 };
 
 struct profiler_count {
@@ -26,8 +27,8 @@ profiler_hook(lua_State *L, lua_Debug *ar) {
 		index -= p->total;
 	}
 	log[index].linedefined = ar->linedefined;
-	// notice: proto must not be collected
-	log[index].source = ar->short_src;
+	strncpy(log[index].source, ar->short_src, 11);
+	log[index].source[11] = 0;
 }
 
 static int
