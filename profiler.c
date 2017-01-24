@@ -21,13 +21,17 @@ profiler_hook(lua_State *L, lua_Debug *ar) {
 	struct profiler_count * p = lua_touserdata(L, -1);
 	lua_pop(L, 1);
 	struct profiler_log * log = (struct profiler_log *)(p+1);
-	lua_getinfo(L, "S", ar);
 	int index = p->index++;
-	while(index > p->total) {
+	while(index >= p->total) {
 		index -= p->total;
 	}
-	log[index].linedefined = ar->linedefined;
-	strcpy(log[index].source, ar->short_src);
+	if (lua_getinfo(L, "S", ar) == 0) {
+		log[index].linedefined = ar->linedefined;
+		strcpy(log[index].source, ar->short_src);
+	} else {
+		log[index].linedefined = 1;
+		strcpy(log[index].source, "[unknown]");
+	}
 }
 
 static int
