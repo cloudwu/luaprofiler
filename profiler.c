@@ -4,7 +4,7 @@
 
 struct profiler_log {
 	int linedefined;
-	char source[12];
+	char source[LUA_IDSIZE];
 };
 
 struct profiler_count {
@@ -27,8 +27,7 @@ profiler_hook(lua_State *L, lua_Debug *ar) {
 		index -= p->total;
 	}
 	log[index].linedefined = ar->linedefined;
-	strncpy(log[index].source, ar->short_src, 11);
-	log[index].source[11] = 0;
+	strcpy(log[index].source, ar->short_src);
 }
 
 static int
