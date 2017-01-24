@@ -25,7 +25,7 @@ profiler_hook(lua_State *L, lua_Debug *ar) {
 	while(index >= p->total) {
 		index -= p->total;
 	}
-	if (lua_getinfo(L, "S", ar) == 0) {
+	if (lua_getinfo(L, "S", ar) != 0) {
 		log[index].linedefined = ar->linedefined;
 		strcpy(log[index].source, ar->short_src);
 	} else {
